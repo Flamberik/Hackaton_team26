@@ -253,13 +253,13 @@ Vamos a comenzar un análisis exhaustivo de cada uno de los puertos y sus servic
 **53/tcp - Simple DNS Plus**
 ![Image](Pasted%20image%2020220521103335.png?raw=true)
 
-Vamos a intentar un ataque de transferencia de zona, para ello, modificando correctamente el fichero `/etc/hosts` vamos a analizar el servicio con el comando `dig`y con metasploit.
+Vamos a intentar un ataque de transferencia de zona, para ello, modificando correctamente el fichero `/etc/hosts`, vamos a analizar el servicio con el comando `dig`y con metasploit.
 ```
 dig @172.16.54.182 geohome.com axfr
 ```
 ![Image](Pasted%20image%2020220521105400.png?raw=true)
 
-Hasta aquí no hemos obtenido nada jugoso de este servicio.
+Hasta aquí no hemos obtenido nada interesante de este servicio.
 
 ###### Aplicaciones Web
 Sabiendo que la IP de la máquina es la `172.16.54.182` vamos a modificar el fichero /etc/hosts para entrar usando su propio nombre de dominio para analizar si hay virtual hosting.
@@ -277,7 +277,7 @@ Vemos que no aplica virtual hostings, al menos aparentemente.
 Aplicamos un pequeño análisis por fuerza bruta de directorios y archivos con nmap:
 `nmap --script http-enum -p 80 172.16.54.182`
 ![Image](Pasted%20image%2020220521111111.png?raw=true)
-Ya conseguimos una ruta que además pareciera que aquí el virtual hosting es fundamental. Ya vemos que el flujo del análisis pasa por el puerto 443, saltamos de momento a este análisis.
+Ya conseguimos una ruta que además parece que aquí el virtual hosting es fundamental. Vemos que el flujo del análisis pasa por el puerto 443, saltamos de momento a este análisis.
 
 
 **443/tcp - Microsoft HTTPAPI httpd 2.0 **
@@ -337,7 +337,7 @@ searchsploit -x php/webapps/50766.py
 ```
 ![Image](Pasted%20image%2020220521120925.png?raw=true)
 Vemos que hay un exploit creado el 18 de Febrero de este mismo año.
-En el exploit se utiliza `sqlmap` para extraer y sonsacar la información de la base de datos. Analizandolo y adaptándolo a nuestro caso he preferido ejecutar directamente `sqlmap` en lugar de el script.
+En el exploit se utiliza `sqlmap` para extraer y sonsacar la información de la base de datos. Analizándolo y adaptándolo a nuestro caso he preferido ejecutar directamente `sqlmap` en lugar de el script.
 
 Para obtener el contenido de la base de datos "flag" ejecutamos con sqlmap:
 ```
